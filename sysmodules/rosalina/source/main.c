@@ -46,6 +46,10 @@
 #include "task_runner.h"
 #include "plugin.h"
 
+
+#include "datasetCapture.h"
+
+
 bool isN3DS;
 
 Result __sync_init(void);
@@ -267,6 +271,7 @@ int main(void)
     MyThread *menuThread = menuCreateThread();
     MyThread *taskRunnerThread = taskRunnerCreateThread();
     MyThread *errDispThread = errDispCreateThread();
+	MyThread *datasetCaptureThread = datasetCapture_CreateThread();
     bootdiagCreateThread();
 
     if (R_FAILED(ServiceManager_Run(services, notifications, NULL)))
@@ -275,9 +280,10 @@ int main(void)
     TaskRunner_Terminate();
 
     MyThread_Join(menuThread, -1LL);
-
+	
     MyThread_Join(taskRunnerThread, -1LL);
     MyThread_Join(errDispThread, -1LL);
+	MyThread_Join(datasetCaptureThread, -1LL);
 
     return 0;
 }
